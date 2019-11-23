@@ -3,7 +3,7 @@
 close all;
 clear;
 
-G = tf([1],[1 6 5 6])
+G = tf([1],[1 6 11 6])
 [A,B,C,D] = tf2ss(G.num{1},G.den{1})
 
 Mc = [B A*B A*A*B]
