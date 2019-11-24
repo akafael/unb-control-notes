@@ -23,9 +23,11 @@ Bma = B*N
 Cma = C
 Dma = D
 
-polyMa = wrev(coeffs(det(s*eye(size(Ama))-Ama),s))
+% Find Inner Loop Characteristic Equation
+I = eye(size(Ama));
+polyMa = flip(coeffs(det(s*I-Ama),s))
 
-% Ensure one pole equals zero
+% Ensure stead state error equals zero by placing one pole to zero
 F(end) = solve(polyMa(end),F(end))
 
 % Closed Loop Space State Expression
@@ -34,16 +36,18 @@ Bmf = B*N
 Cmf = C
 Dmf = D
 
-polyMf = wrev(coeffs(det(s*eye(size(Amf))-Amf),s))
+% Find Outer Loop Characteristic Equation
+I = eye(size(Amf));
+polyMf = flip(coeffs(det(s*I-Amf),s))
 
 % Find Desired Poles
 polesDesired = [complex(-1,-0),complex(-10,0),complex(-10,0)];
 polyDesired = poly(polesDesired)
 
-% Solve to find desired gain
+% Solve linear system to find desired gain matrix
 polyK = (polyMf - polyDesired)
-[m,v] = equationsToMatrix(polyK,[F(1:end-1) sym('N')])
-x = linsolve(m,v)
+[m,v] = equationsToMatrix(polyK,[F(1:end-1) sym('N')]);
+x = linsolve(m,v);
 F(1:end-1) = x(1:end-1)
 N = x(end)
 
@@ -56,7 +60,7 @@ Dc = double(D)
 [num,den] = ss2tf(Ac,Bc,Cc,Dc);
 Gc = tf(num,den)
 
-%% Graphic Evaluation
+%% Step Response Evaluation
 hold on;
 step(G)
 step(Gc)
