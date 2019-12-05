@@ -33,7 +33,7 @@ end
 sGi = 1/s                  % Symbolic
 sSteadErrorExpr = simplify((s*sR)/(1+(sG*sGi)))
 Kc = double((subs(sSteadErrorExpr,s,0))/MaxError)
-Gi = tf(1,[1 0])           % Transfer Function
+Gi = tf(Kc,[1 0])           % Transfer Function
 
 %% Lag
 phi = sin(PhaseMarginRad);

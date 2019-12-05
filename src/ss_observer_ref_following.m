@@ -76,7 +76,7 @@ polyF = (polyMf - polyDesired)
 [m,v] = equationsToMatrix(polyF,[F(1:end-1) sym('N')])
 x = linsolve(m,v)
 nF(1:end-1) = x(1:end-1)
-N = x(end)
+N = double(x(end))
 
 % Replace any missing values
 nF(end) = subs(nF(end),F(1:end-1),nF(1:end-1))
@@ -86,6 +86,8 @@ Ac = double(A - B*nF -nL*C - B*N*C)
 Bc = double(B*N)
 Cc = double(C)
 Dc = double(D)
+F = double(nF)
+L = double(nL)
 
 [num,den] = ss2tf(Ac,Bc,Cc,Dc);
 Gc = tf(num,den)
@@ -96,3 +98,8 @@ step(G)
 step(Gc)
 legend('G(s)','Gc(s)')
 hold off;
+
+%% Simulink
+modelFileName = 'ss_project_observer';
+% Run Simulation
+sim(ss_project);

@@ -49,13 +49,14 @@ polyK = (polyMf - polyDesired)
 [m,v] = equationsToMatrix(polyK,[F(1:end-1) sym('N')]);
 x = linsolve(m,v);
 F(1:end-1) = x(1:end-1)
-N = x(end)
+N = double(x(end))
 
 % Controled System
 Ac = double(A - B*F - B*N*C)
 Bc = double(B*N)
 Cc = double(C)
 Dc = double(D)
+F = double(F)
 
 [num,den] = ss2tf(Ac,Bc,Cc,Dc);
 Gc = tf(num,den)
@@ -66,3 +67,8 @@ step(G)
 step(Gc)
 legend('G(s)','Gc(s)')
 hold off;
+
+%% Simulink
+modelFileName = 'ss_project';
+% Run Simulation
+sim(ss_project);
